@@ -31,11 +31,13 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
-		<Unit filename="base64.cpp" />
-		<Unit filename="base64.h" />
+		<Unit filename="base64/base64.cpp" />
+		<Unit filename="base64/base64.h" />
 		<Unit filename="main.cpp" />
-		<Unit filename="tea.cpp" />
-		<Unit filename="tea.h" />
+		<Unit filename="md5/md5.cpp" />
+		<Unit filename="md5/md5.h" />
+		<Unit filename="tea/tea.cpp" />
+		<Unit filename="tea/tea.h" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>
