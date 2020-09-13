@@ -1,12 +1,17 @@
 #include <iostream>
 #include <fstream>
 #include <sys/stat.h>
+#include <thread>
+#include <mutex>
+#include <conio.h>
 #include "base64.h"
 #include "tea.h"
 
 #define MIN(x,y) (((x)<(y)) ? (x) : (y))
 
 using namespace std;
+
+mutex mu;
 
 string getFileName(const string& s, string* pathwithoutname) {
     char sep = '/';
@@ -22,11 +27,8 @@ string getFileName(const string& s, string* pathwithoutname) {
     return s;
 }
 
-int main(const int argc, const char* argv[])
+bool encodeFile(const string fpath, const string key)
 {
-    const string fpath = "test.txd";
-    const string key = "JdzFR2XLDaBtpGGD";
-
     // Key conversion
     unsigned int k[4];
     unsigned int kbuffer[4];
@@ -35,17 +37,20 @@ int main(const int argc, const char* argv[])
     memcpy(kbuffer, key.c_str(), MIN(key.length(), 16));
     for (int i = 0; i < 4; i++)
         k[i] = kbuffer[i];
-    cout << "[OUTPUT] Key converted" << endl;
+    mu.lock(); cout << "[OUTPUT] Key converted" << endl; mu.unlock();
 
     // Reading file
     ifstream file(fpath, ios::in | ios::binary);
     struct stat results;
-    stat(fpath.c_str(), &results);
+    if (stat(fpath.c_str(), &results) != 0) {
+        mu.lock(); cout << "[ERROR] File '" << fpath << "' not found" << endl; mu.unlock();
+        return false;
+    }
     size_t file_size = results.st_size;
     char* fbuffer = new char[file_size];
     file.read(fbuffer, file_size);
     file.close();
-    cout << "[OUTPUT] File has been read" << endl;
+    mu.lock(); cout << "[OUTPUT] File '" << fpath << "' has been read" << endl; mu.unlock();
 
     // Creating buffer
     size_t vbuffer_size = file_size;
@@ -73,9 +78,9 @@ int main(const int argc, const char* argv[])
     // Base64 encoding
     string ob64 = base64encode((unsigned char*)obuffer, obuffer_size);
     delete[] obuffer;
-    cout << "[OUTPUT] File has been crypted" << endl;
+    mu.lock(); cout << "[OUTPUT] File '" << fpath << "' has been crypted" << endl; mu.unlock();
 
-    // File name generating
+    // Filename generating
     string filefolder;
     string old_filename = getFileName(fpath, &filefolder);
     string fullpath = filefolder + old_filename + ".enc";
@@ -87,7 +92,56 @@ int main(const int argc, const char* argv[])
     }
     ofile << ob64;
     ofile.close();
-    cout << "[OUTPUT] File has been written, exiting..." << endl;
+    mu.lock(); cout << "[OUTPUT] File '" << fullpath << "' has been written" << endl; mu.unlock();
 
+    return true;
+}
+
+int main(const int argc, const char* argv[])
+{
+    // path
+    string fpath;
+    if (argc > 1) {
+        fpath.assign(argv[1]);
+    } else {
+        mu.lock();
+        cout << "[OUTPUT] You can open file(s) with this program" << endl
+             << "[OUTPUT] Or drag'n'drop on it" << endl
+             << "[INPUT] Enter filename (without spaces): ";
+        mu.unlock();
+        cin >> fpath;
+    }
+
+    // key reader
+    string key;
+    cout << "[INPUT] Enter key (max 16 symbols): ";
+    cin >> key;
+    cout << endl;
+
+    thread** threads;
+    if (argc > 1) {
+        threads = new thread*[argc - 1];
+        for (int i = 0; i < argc - 1; i++) {
+            string tfpath(argv[i + 1]);
+            thread* t  = new thread(encodeFile, tfpath, key);
+            threads[i] = t;
+        }
+        for (int i = 0; i < argc - 1; i++) {
+            threads[i]->join();
+        }
+    } else {
+        threads = new thread*[1];
+        thread* t = new thread(encodeFile, fpath, key);
+        threads[0] = t;
+        t->join();
+    }
+
+    for (size_t i = 0; i < argc - 1; i++) {
+        delete threads[i];
+    }
+    delete[] threads;
+
+    cout << "[OUTPUT] Selected files are encrypted, press any key to close program." << endl;
+    getch();
     return 0;
 }
