@@ -6,22 +6,27 @@
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
-			<Target title="Debug">
-				<Option output="bin/Debug/model_coder" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj/Debug/" />
-				<Option type="1" />
-				<Option compiler="gcc" />
-				<Compiler>
-					<Add option="-g" />
-				</Compiler>
-			</Target>
-			<Target title="Release">
-				<Option output="bin/Release/model_coder" prefix_auto="1" extension_auto="1" />
-				<Option object_output="obj/Release/" />
+			<Target title="coder">
+				<Option output="bin/coder/model_coder" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/coder/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-O2" />
+					<Add option="-std=c++11" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+			<Target title="decoder">
+				<Option output="bin/decoder/model_decoder" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/decoder/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-std=c++11" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
@@ -30,14 +35,22 @@
 		</Build>
 		<Compiler>
 			<Add option="-Wall" />
+			<Add option="-std=c++11" />
 		</Compiler>
 		<Unit filename="base64/base64.cpp" />
 		<Unit filename="base64/base64.h" />
-		<Unit filename="main.cpp" />
+		<Unit filename="coder.cpp">
+			<Option target="coder" />
+		</Unit>
+		<Unit filename="decoder.cpp">
+			<Option target="decoder" />
+		</Unit>
 		<Unit filename="md5/md5.cpp" />
 		<Unit filename="md5/md5.h" />
 		<Unit filename="tea/tea.cpp" />
 		<Unit filename="tea/tea.h" />
+		<Unit filename="util.cpp" />
+		<Unit filename="util.h" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>
