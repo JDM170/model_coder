@@ -10,23 +10,18 @@
 
 using namespace std;
 
-bool encodeFile(const string fpath, const string key) {
-    // Key conversion
-    unsigned int k[4];
-    keyConversion(key, k);
-    mLockedCout("[OUTPUT] Key converted\n");
-
+bool encodeFile(const string fpath, const unsigned int* key) {
     // Reading file
-    ifstream file(fpath, ios::in | ios::binary);
     struct stat results;
     if(stat(fpath.c_str(), &results) != 0) {
         mLockedCout("[ERROR] File '" + fpath + "' not found\n");
         return false;
     }
+    ifstream ifile(fpath, ios::in | ios::binary);
     size_t file_size = results.st_size;
     char* fbuffer = new char[file_size];
-    file.read(fbuffer, file_size);
-    file.close();
+    ifile.read(fbuffer, file_size);
+    ifile.close();
     mLockedCout("[OUTPUT] File '" + fpath + "' has been read\n");
 
     // Creating buffer
@@ -40,19 +35,19 @@ bool encodeFile(const string fpath, const string key) {
     // TEA encoding
     size_t obuffer_size = vbuffer_size + 4;
     char* obuffer = new char[obuffer_size];
-    unsigned int v[2];
-    memset(v, 0, sizeof(v));
+    unsigned int value[2];
+    memset(value, 0, sizeof(value));
     for(unsigned int i = 0; i < file_size; i += 4) {
-        v[0] = *(unsigned int*)&vbuffer[i];
-        encode(&v[0], &k[0]);
-        memcpy(&obuffer[i], &v[0], 4);
+        value[0] = *(unsigned int*)&vbuffer[i];
+        encode(&value[0], &key[0]);
+        memcpy(&obuffer[i], &value[0], 4);
         memcpy(vbuffer, fbuffer, file_size);
     }
-    memcpy(&obuffer[obuffer_size - 4], &v[1], 4);
+    memcpy(&obuffer[vbuffer_size], &value[1], 4);
     mLockedCout("[OUTPUT] File '" + fpath + "' has been TEA-coded\n");
 
     // Base64 encoding
-    string ob64 = base64encode((unsigned char*)obuffer, obuffer_size);
+    string obuffer64 = base64encode((unsigned char*)obuffer, obuffer_size);
     mLockedCout("[OUTPUT] File '" + fpath + "' has been Base64-coded\n");
 
     // Filename generating
@@ -64,7 +59,7 @@ bool encodeFile(const string fpath, const string key) {
     ofstream ofile(fullpath.c_str(), ios::out | ios::binary);
     if(ofile.good())
         ofile.clear();
-    ofile << ob64;
+    ofile << obuffer64;
     ofile.close();
     mLockedCout("[OUTPUT] File '" + fullpath + "' has been written\n");
 
@@ -86,17 +81,22 @@ int main(const int argc, const char* argv[]) {
     }
 
     // Reading key
-    string key;
+    string skey;
     cout << "[INPUT] Enter key: ";
-    cin >> key;
+    cin >> skey;
     cout << endl;
+
+    // Key conversion
+    unsigned int bkey[4];
+    keyConversion(skey, bkey);
+    cout << "[OUTPUT] Key converted" << endl;
 
     thread** threads;
     if(argc > 1) {
         threads = new thread*[argc - 1];
         for(int i = 0; i < argc - 1; i++) {
             string tfpath(argv[i + 1]);
-            thread* t = new thread(encodeFile, tfpath, key);
+            thread* t = new thread(encodeFile, tfpath, bkey);
             threads[i] = t;
         }
         for(int i = 0; i < argc - 1; i++) {
@@ -104,12 +104,12 @@ int main(const int argc, const char* argv[]) {
         }
     } else {
         threads = new thread*[1];
-        thread* t = new thread(encodeFile, fpath, key);
+        thread* t = new thread(encodeFile, fpath, bkey);
         threads[0] = t;
         t->join();
     }
 
-    for(size_t i = 0; i < argc - 1; i++) {
+    for(int i = 0; i < argc - 1; i++) {
         delete threads[i];
     }
     delete[] threads;

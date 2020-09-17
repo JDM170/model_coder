@@ -5,7 +5,7 @@
 #include <string>
 typedef unsigned char BYTE;
 
-std::string base64encode(BYTE const* buf, unsigned int bufLen);
+std::string base64encode(BYTE const*, unsigned int);
 std::vector<BYTE> base64decode(std::string const&);
 
 #endif
