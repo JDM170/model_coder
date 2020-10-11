@@ -23,13 +23,14 @@ namespace Tea
 		public void encode(uint[] v, uint[] k) {
 			uint v0 = v[0], v1 = v[1];
 			uint sum = 0;
-			for (int i = 0; i < 32; i++) {
+			unchecked {
+			for (uint i = 0; i < 32; i++) {
 			//for (uint i = 32; i > 0; i--) {
-				unchecked {
+			//	unchecked {
 					v0 += (((v1 << 4) ^ (v1 >> 5)) + v1) ^ (sum + k[sum & 3]);
 					sum += c_delta;
 					v1 += (((v0 << 4) ^ (v0 >> 5)) + v0) ^ (sum + k[(sum >> 11) & 3]);
-				}
+			}
 				//sum += c_delta;
 				//v0 += (v1 << 4) + k[0] ^ v1 + sum ^ (v1 >> 5) + k[1];
 				//v1 += (v0 << 4) + k[2] ^ v0 + sum ^ (v0 >> 5) + k[3];
