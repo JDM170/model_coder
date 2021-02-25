@@ -75,8 +75,8 @@ namespace Utils
 		public string Base64Decode(string base64EncodedData)
 		{
 			var base64EncodedBytes = Convert.FromBase64String(base64EncodedData);
-			foreach (var i in base64EncodedBytes)
-				Console.WriteLine(" " + i);
+//			foreach (var i in base64EncodedBytes)
+//				Console.WriteLine(" " + i);
 			return Encoding.UTF8.GetString(base64EncodedBytes);
 		}
 		#endregion
