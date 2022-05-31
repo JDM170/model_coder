@@ -20,12 +20,12 @@ bool decodeFile(const string fpath, const unsigned int* key) {
     string fbuffer64;
     ifile >> fbuffer64;
     ifile.close();
-    mLockedCout("[OUTPUT] File '" + fpath + "' has been read\n");
+    //mLockedCout("[OUTPUT] File '" + fpath + "' has been read\n"); // Debug
 
     // Base64 decoding
     vector<unsigned char> fbuffer = base64decode(fbuffer64);
     size_t fbuffer_size = fbuffer.size();
-    mLockedCout("[OUTPUT] File '" + fpath + "' has been Base64-decoded\n");
+    //mLockedCout("[OUTPUT] File '" + fpath + "' has been Base64-decoded\n"); // Debug
 
     // TEA decoding
     unsigned char* vbuffer = new unsigned char[fbuffer_size];
@@ -38,7 +38,7 @@ bool decodeFile(const string fpath, const unsigned int* key) {
         decode(&value[0], &key[0]);
         memcpy(&vbuffer[i], &value[0], 4);
     }
-    mLockedCout("[OUTPUT] File '" + fpath + "' has been TEA-decoded\n");
+    //mLockedCout("[OUTPUT] File '" + fpath + "' has been TEA-decoded\n"); // Debug
 
     // Filename generating
     string filefolder;
@@ -52,7 +52,8 @@ bool decodeFile(const string fpath, const unsigned int* key) {
     for(unsigned int i = 0; i < fbuffer_size; i++)
         ofile << vbuffer[i];
     ofile.close();
-    mLockedCout("[OUTPUT] File '" + fullpath + "' has been written\n");
+    //mLockedCout("[OUTPUT] File '" + fullpath + "' has been written\n"); // Debug
+    mLockedCout("[OUTPUT] File '" + fullpath + "' has been decoded\n");
 
     delete[] vbuffer;
 
@@ -78,7 +79,7 @@ int main(const int argc, const char* argv[]) {
     // Key conversion
     unsigned int bkey[4];
     keyConversion(skey, bkey);
-    cout << "[OUTPUT] Key converted" << endl;
+    //cout << "[OUTPUT] Key converted" << endl; // Debug
 
     thread** threads;
     if(argc > 1) {
