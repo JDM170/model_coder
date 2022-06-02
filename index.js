@@ -53,7 +53,8 @@ getDirectories(argv.res, (err, res) => {
             const newFilePath = file + 'c';
 
             // Encoding first $encodeSize bytes from file
-            const key = crypto.createHash('sha256').update(argv.pass).digest('hex').toUpperCase();
+            // const key = crypto.createHash('sha256').update(argv.pass).digest('hex').toUpperCase();
+            const key = crypto.createHash('md5').update(argv.pass).digest('hex').substring(0, 16);
             const data = fs.readFileSync(file);
             let array = [];
             for (let i = 0; i < encodeSize; i++)
