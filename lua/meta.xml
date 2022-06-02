@@ -1,0 +1,9 @@
+<meta>
+    <info author="JDM17" name="Decoder for XaskeL's locked cars" type="script" />
+    <min_mta_version client="1.5.6-9.18728" />
+
+    <script src="stub.lua" type="client" cache="false" />
+
+    <export function="fileDecode" type="client" />
+    <export function="safetyDelete" type="client" />
+</meta>
