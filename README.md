@@ -1,1 +1,2 @@
-#### Thanks [Toliak](https://github.com/Toliak) for his [MTA-TEA-Encoder](https://github.com/Toliak/MTA-TEA-Encoder)
+#### Thanks [Toliak](https://github.com/Toliak) for his [MTA-TEA-Encoder](https://github.com/Toliak/MTA-TEA-Encoder) (full_file)
+#### Thanks [AlexRazor1337](https://github.com/AlexRazor1337) for his [mta-model-encoder](https://github.com/AlexRazor1337/mta-model-encoder) (partial_file)
