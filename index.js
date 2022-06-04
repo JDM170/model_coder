@@ -63,7 +63,8 @@ getDirectories(argv.res, (err, res) => {
             // Checking file for existing, if exists - deleting it
             try {
                 fs.accessSync(newFilePath);
-                fs.rmSync(newFilePath);
+                //fs.rmSync(newFilePath);
+                fs.ftruncateSync(newFilePath);
             } catch (err) {
                 // console.log("access err: " + err);
             }
