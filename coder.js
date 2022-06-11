@@ -2,7 +2,7 @@ const chalk = require('chalk');
 const yargs = require('yargs/yargs')
 const { hideBin } = require('yargs/helpers')
 const fs = require('fs');
-const fse = require('fs-extra')
+// const fse = require('fs-extra')
 const path = require('path');
 const ora = require('ora');
 const glob = require("glob");
@@ -56,22 +56,21 @@ getDirectories(argv.res, (err, res) => {
             // const key = crypto.createHash('sha256').update(argv.pass).digest('hex').toUpperCase();
             const key = crypto.createHash('md5').update(argv.pass).digest('hex').substring(0, 16);
             const data = fs.readFileSync(file);
-            let array = [];
+            let encoded = [];
             for (let i = 0; i < encodeSize; i++)
-                array.push(tea.encode(data[i].toString(), key));
+                encoded.push(tea.encode(data[i].toString(), key));
 
             // Checking file for existing, if exists - deleting it
             try {
                 fs.accessSync(newFilePath);
-                //fs.rmSync(newFilePath);
-                fs.ftruncateSync(newFilePath);
+                fs.rmSync(newFilePath);
             } catch (err) {
                 // console.log("access err: " + err);
             }
             
             let fd = fs.openSync(newFilePath, 'a+'); // Open file
-            fs.writeSync(fd, array.join(""), 0); // Writing encoded part in start of file
-            fs.writeSync(fd, data, encodeSize, data.length-encodeSize); // Writing original part after encoded part
+            fs.writeSync(fd, encoded.join(""), 0); // Writing encoded part in start of file
+            fs.writeSync(fd, data, encodeSize, data.length - encodeSize); // Writing original part after encoded part
             fs.closeSync(fd); // Close file
 
             // fse.removeSync(file); // Remove original non-encoded file
