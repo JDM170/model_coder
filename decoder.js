@@ -12,10 +12,10 @@ const error = chalk.bold.red;
 
 const argv = yargs(hideBin(process.argv))
 .usage('Usage: $0 -pass [pass] -res [path]')
-.example('$0 -pass encryptme -res resourceName', 'Encrypt resourceName')
+.example('$0 -pass decryptme -res resourceName', 'Decrypt resourceName')
 .options('pass', {
     alias: 'p',
-    describe: 'Password for the encryption',
+    describe: 'Password for the decryption',
     type: 'string',
     coerce: arg =>
     arg && arg.length >= 6 ? arg : undefined

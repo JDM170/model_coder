@@ -4,7 +4,8 @@
     "main": "coder.js",
     "private": "true",
     "scripts": {
-        "buildc": "pkg --target node16-win-x64 --compress GZip coder.js"
+        "buildc": "pkg --target node16-win-x64 --compress GZip coder.js",
+        "buildd": "pkg --target node16-win-x64 --compress GZip decoder.js"
     },
     "dependencies": {
         "chalk": "^4.1.2",
