@@ -53,7 +53,7 @@ bool encodeFile(const string fpath, const unsigned int* key) {
     // Filename generating
     string filefolder;
     string old_filename = getFileName(fpath, &filefolder);
-    string fullpath = filefolder + old_filename + ".enc";
+    string fullpath = filefolder + old_filename + "c";
 
     // Writing file
     ofstream ofile(fullpath.c_str(), ios::out | ios::binary);
@@ -62,7 +62,7 @@ bool encodeFile(const string fpath, const unsigned int* key) {
     ofile << obuffer64;
     ofile.close();
     //mLockedCout("[OUTPUT] File '" + fullpath + "' has been written\n"); // Debug
-	mLockedCout("[OUTPUT] File '" + fullpath + "' has been encoded\n");
+	mLockedCout("[OUTPUT] File '" + fpath + "' has been encoded\n");
 
     delete[] fbuffer;
     delete[] vbuffer;

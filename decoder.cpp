@@ -53,7 +53,7 @@ bool decodeFile(const string fpath, const unsigned int* key) {
         ofile << vbuffer[i];
     ofile.close();
     //mLockedCout("[OUTPUT] File '" + fullpath + "' has been written\n"); // Debug
-    mLockedCout("[OUTPUT] File '" + fullpath + "' has been decoded\n");
+    mLockedCout("[OUTPUT] File '" + fpath + "' has been decoded\n");
 
     delete[] vbuffer;
 
