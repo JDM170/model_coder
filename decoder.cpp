@@ -89,9 +89,8 @@ int main(const int argc, const char* argv[]) {
             thread* t = new thread(decodeFile, tfpath, bkey);
             threads[i] = t;
         }
-        for(int i = 0; i < argc - 1; i++) {
+        for(int i = 0; i < argc - 1; i++)
             threads[i]->join();
-        }
     } else {
         threads = new thread*[1];
         thread* t = new thread(decodeFile, fpath, bkey);
@@ -99,9 +98,8 @@ int main(const int argc, const char* argv[]) {
         t->join();
     }
 
-    for(int i = 0; i < argc - 1; i++) {
+    for(int i = 0; i < argc - 1; i++)
         delete threads[i];
-    }
     delete[] threads;
 
     cout << "[OUTPUT] Selected files are decrypted, press any key to close program." << endl;
